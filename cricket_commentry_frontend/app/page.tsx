@@ -1,50 +1,74 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Action, Data, Review } from "./interfaces";
+import Button from "./components/Button";
 
-enum Review {
-  Unplayed,
-  Played,
-  Out,
-  Stiker,
-  NonStiker,
-}
-
-interface TeamScoreboard {
-  total_runs: number;
-  total_wickets: number;
-  total_wide_balls: number;
-  total_no_balls: number;
-  total_balls: number;
-}
-
-interface Player {
-  runs: number;
-  review: Review;
-}
-
-interface Players {
-  [key: string]: Player;
-}
-
-interface Data {
-  team_scoreboard: TeamScoreboard;
-  players: Players;
-}
-
-interface Payload {
-  increment_ball?: number;
-  increment_runs?: number;
-  increment_wicket?: Number;
-  increment_no_ball?: Number;
-  increment_wide_ball?: Number;
-}
-
-interface Action {
-  type: number | string;
-  payload: Payload;
-}
-
+const buttons = [
+  {
+    type: 0,
+    payload: {
+      increment_ball: 1,
+      increment_runs: 0,
+    },
+  },
+  {
+    type: 1,
+    payload: {
+      increment_ball: 1,
+      increment_runs: 0,
+    },
+  },
+  {
+    type: 2,
+    payload: {
+      increment_ball: 1,
+      increment_runs: 2,
+    },
+  },
+  {
+    type: 3,
+    payload: {
+      increment_ball: 1,
+      increment_runs: 3,
+    },
+  },
+  {
+    type: 4,
+    payload: {
+      increment_ball: 1,
+      increment_runs: 4,
+    },
+  },
+  {
+    type: 6,
+    payload: {
+      increment_ball: 1,
+      increment_runs: 6,
+    },
+  },
+  {
+    type: "wicket",
+    payload: {
+      increment_ball: 1,
+      increment_wicket: 1,
+    },
+  },
+  {
+    type: "no_ball",
+    payload: {
+      increment_ball: 0,
+      increment_runs: 1,
+    },
+  },
+  {
+    type: "wide",
+    payload: {
+      increment_ball: 0,
+      increment_runs: 1,
+    },
+  },
+];
 export default function Home() {
   const [data, setData] = useState<Data>({
     team_scoreboard: {
@@ -72,10 +96,25 @@ export default function Home() {
     type: -1,
     payload: { increment_ball: 0, increment_runs: 0 },
   });
-
   const [actions, setActions] = useState<Action[]>([]);
 
+  useEffect(() => {
+    console.log("after setActions", actions);
+  }, [actions]);
+
   function updateScoreboard() {
+    const values = actions.reduce((acc, item) => {
+      acc.push(item.type);
+      return acc;
+    }, []);
+
+    if (values.includes("wicket") && values.includes("no_ball")) {
+      const newResult = actions.filter((item) => item.type !== "wicket");
+      console.log("filtered result", newResult);
+      // this is not updating immediatelly
+      setActions(newResult);
+    }
+
     actions?.map((action) => {
       switch (action.type) {
         case 0:
@@ -200,151 +239,25 @@ export default function Home() {
       }
     });
     setActions([]);
+    console.log("after cleanup", actions);
   }
 
   return (
-    <main className="w-screen h-screen">
+    <main className="w-screen h-screen flex justify-center items-center">
       <div className="container mx-auto flex flex-row bg-white">
         <div className="w-[75%]">
-          <button
-            className="p-2 m-4 border-black border-2"
-            onClick={() => {
-              setAction({
-                type: 0,
-                payload: {
-                  increment_ball: 1,
-                  increment_runs: 0,
-                },
-              });
+          {buttons.map((item) => (
+            <Button
+              key={item.type}
+              title={item.type}
+              setActions={setActions}
+              setAction={setAction}
+              action={item}
+            />
+          ))}
 
-              setActions((prevAction) => [...prevAction, action]);
-            }}
-          >
-            0
-          </button>
-          <button
-            className="p-2 m-4 border-black border-2"
-            onClick={() => {
-              setAction({
-                type: 1,
-                payload: {
-                  increment_ball: 1,
-                  increment_runs: 1,
-                },
-              });
-
-              setActions((prevAction) => [...prevAction, action]);
-            }}
-          >
-            1
-          </button>
-          <button
-            className="p-2 m-4 border-black border-2"
-            onClick={() => {
-              setAction({
-                type: 2,
-                payload: {
-                  increment_ball: 1,
-                  increment_runs: 2,
-                },
-              });
-
-              setActions((prevAction) => [...prevAction, action]);
-            }}
-          >
-            2
-          </button>
-          <button
-            className="p-2 m-4 border-black border-2"
-            onClick={() => {
-              setAction({
-                type: 3,
-                payload: {
-                  increment_ball: 1,
-                  increment_runs: 3,
-                },
-              });
-              setActions((prevAction) => [...prevAction, action]);
-            }}
-          >
-            3
-          </button>
-          <button
-            className="p-2 m-4 border-black border-2"
-            onClick={() => {
-              setAction({
-                type: 1,
-                payload: {
-                  increment_ball: 1,
-                  increment_runs: 4,
-                },
-              });
-              setActions((prevAction) => [...prevAction, action]);
-            }}
-          >
-            4
-          </button>
-          <button
-            className="p-2 m-4 border-black border-2"
-            onClick={() => {
-              setAction({
-                type: 6,
-                payload: {
-                  increment_ball: 1,
-                  increment_runs: 6,
-                },
-              });
-              setActions((prevAction) => [...prevAction, action]);
-            }}
-          >
-            6
-          </button>
-          <button
-            className="p-2 m-4 border-black border-2"
-            onClick={() => {
-              setAction({
-                type: "wicket",
-                payload: {
-                  increment_ball: 1,
-                  increment_wicket: 1,
-                },
-              });
-              setActions((prevAction) => [...prevAction, action]);
-            }}
-          >
-            Wicket
-          </button>
-          <button
-            className="p-2 m-4 border-black border-2"
-            onClick={() => {
-              setAction({
-                type: "no_ball",
-                payload: {
-                  increment_ball: 0,
-                  increment_runs: 1,
-                },
-              });
-              setActions((prevAction) => [...prevAction, action]);
-            }}
-          >
-            No Ball
-          </button>
-          <button
-            className="p-2 m-4 border-black border-2"
-            onClick={() => {
-              setAction({
-                type: "wide",
-                payload: {
-                  increment_ball: 0,
-                  increment_runs: 1,
-                },
-              });
-              setActions((prevAction) => [...prevAction, action]);
-            }}
-          >
-            Wide
-          </button>
           <br />
+
           <button
             className="p-2 m-4 border-black border-2"
             onClick={updateScoreboard}
