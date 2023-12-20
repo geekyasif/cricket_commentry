@@ -1,153 +1,91 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { Action, Data, Review } from "./interfaces";
+import { useRef, useState } from "react";
+import { IAction, IData, IReview } from "./interfaces";
 import Button from "./components/Button";
 import Scoreboard from "./components/Scoreboard";
+import buttons from "./constant/buttons";
+import CurrentPlayer from "./components/CurrentPlayer";
 
-const buttons = [
-  {
-    type: 0,
-    payload: {
-      increment_ball: 1,
-      increment_runs: 0,
+const initialState = {
+  team_scoreboard: {
+    total_runs: 0,
+    total_wickets: 0,
+    total_wide_balls: 0,
+    total_no_balls: 0,
+    total_balls: 0,
+  },
+  players: {
+    sachin: {
+      runs: 0,
+      review: IReview.Unplayed,
+    },
+    dravid: {
+      runs: 0,
+      review: IReview.Unplayed,
     },
   },
-  {
-    type: 1,
-    payload: {
-      increment_ball: 1,
-      increment_runs: 1,
-    },
-  },
-  {
-    type: 2,
-    payload: {
-      increment_ball: 1,
-      increment_runs: 2,
-    },
-  },
-  {
-    type: 3,
-    payload: {
-      increment_ball: 1,
-      increment_runs: 3,
-    },
-  },
-  {
-    type: 4,
-    payload: {
-      increment_ball: 1,
-      increment_runs: 4,
-    },
-  },
-  {
-    type: 6,
-    payload: {
-      increment_ball: 1,
-      increment_runs: 6,
-    },
-  },
-  {
-    type: "wicket",
-    payload: {
-      increment_ball: 1,
-      increment_wicket: 1,
-    },
-  },
-  {
-    type: "no_ball",
-    payload: {
-      increment_ball: 0,
-      increment_runs: 1,
-    },
-  },
-  {
-    type: "wide",
-    payload: {
-      increment_ball: 0,
-      increment_runs: 1,
-    },
-  },
-];
+};
 
 export default function Home() {
-  const [data, setData] = useState<Data>({
-    team_scoreboard: {
-      total_runs: 0,
-      total_wickets: 0,
-      total_wide_balls: 0,
-      total_no_balls: 0,
-      total_balls: 0,
-    },
-    players: {
-      sachin: {
-        runs: 0,
-        review: Review.Unplayed,
-      },
-      dravid: {
-        runs: 0,
-        review: Review.Unplayed,
-      },
-    },
-  });
+  const [data, setData] = useState<IData>(initialState);
   const { team_scoreboard, players } = data;
+
   const [striker, setStriker] = useState<string>("Sachin");
   const [nonstriker, setNonstriker] = useState<string>("Dravid");
+  const refStriker = useRef("sachin");
+  const refNonstriker = useRef("dravid");
 
-  const [action, setAction] = useState<Action>({
+  // storing the current actions
+  const [action, setAction] = useState<IAction>({
     type: -1,
     payload: { increment_ball: 0, increment_runs: 0 },
+    onstrike: "",
   });
-  const actions = useRef<Action[]>([]);
 
-  function updatePlayerScore(run: number) {
+  // storing all the previous actions
+  const actions = useRef<IAction[]>([]);
+
+  // Updating the player score
+  function updatePlayerScore(run: number, onstrike: string) {
     setData((prevData) => {
       const { players } = prevData;
-      const currentStriker = striker.toLowerCase();
 
-      if (currentStriker in players) {
+      if (onstrike in players) {
         return {
           ...prevData,
           players: {
             ...prevData.players,
-            [currentStriker]: {
-              ...prevData.players[currentStriker],
-              runs: prevData.players[currentStriker].runs + run,
+            [onstrike]: {
+              ...prevData.players[onstrike],
+              runs: prevData.players[onstrike].runs + run,
             },
           },
         };
       }
-
       return prevData;
     });
   }
 
+  // swapping the striker and non striker
   function swapStrikerNonstriker() {
-    setStriker((prevStriker) => {
-      setNonstriker((prevNonstriker) => {
-        // Swap the values of striker and nonstriker
-        const temp = prevStriker;
-        return temp;
-      });
-      // Return the original nonstriker as the new striker
-      return nonstriker;
-    });
+    setStriker(nonstriker);
+    setNonstriker(striker);
+    let temp = refStriker.current;
+    refStriker.current = refNonstriker.current;
+    refNonstriker.current = temp;
   }
 
-  function updateScoreboard() {
-    const values = actions.current.reduce((acc, item) => {
-      acc.push(item.type);
-      return acc;
-    }, []);
-
-    if (values.includes("wicket") && values.includes("no_ball")) {
-      const newResult = actions.current.filter(
-        (item) => item.type !== "wicket"
-      );
-      actions.current = newResult;
+  // checking the wicket on no ball and removing from the previous actions
+  function checkLastBallWasWicket() {
+    const lastBall = actions.current.length - 1;
+    if (actions.current[lastBall].type === "wicket") {
+      actions.current.pop();
     }
+  }
 
+  // updating the scoreboard
+  function updateScoreboard() {
     actions.current.map((action) => {
       switch (action.type) {
         case 0:
@@ -162,37 +100,6 @@ export default function Home() {
           }));
           break;
         case 1:
-          setData((prevData) => ({
-            ...prevData,
-            team_scoreboard: {
-              ...prevData.team_scoreboard,
-              total_balls:
-                prevData.team_scoreboard.total_balls +
-                action.payload.increment_ball,
-              total_runs:
-                prevData.team_scoreboard.total_runs +
-                action.payload.increment_runs,
-            },
-          }));
-
-          updatePlayerScore(action.payload.increment_runs);
-          swapStrikerNonstriker();
-          break;
-        case 2:
-          setData((prevData) => ({
-            ...prevData,
-            team_scoreboard: {
-              ...prevData.team_scoreboard,
-              total_balls:
-                prevData.team_scoreboard.total_balls +
-                action.payload.increment_ball,
-              total_runs:
-                prevData.team_scoreboard.total_runs +
-                action.payload.increment_runs,
-            },
-          }));
-          updatePlayerScore(action.payload.increment_runs);
-          break;
         case 3:
           setData((prevData) => ({
             ...prevData,
@@ -206,24 +113,10 @@ export default function Home() {
                 action.payload.increment_runs,
             },
           }));
-          updatePlayerScore(action.payload.increment_runs);
-          swapStrikerNonstriker();
+          updatePlayerScore(action.payload.increment_runs, action.onstrike);
           break;
+        case 2:
         case 4:
-          setData((prevData) => ({
-            ...prevData,
-            team_scoreboard: {
-              ...prevData.team_scoreboard,
-              total_balls:
-                prevData.team_scoreboard.total_balls +
-                action.payload.increment_ball,
-              total_runs:
-                prevData.team_scoreboard.total_runs +
-                action.payload.increment_runs,
-            },
-          }));
-          updatePlayerScore(action.payload.increment_runs);
-          break;
         case 6:
           setData((prevData) => ({
             ...prevData,
@@ -237,7 +130,7 @@ export default function Home() {
                 action.payload.increment_runs,
             },
           }));
-          updatePlayerScore(action.payload.increment_runs);
+          updatePlayerScore(action.payload.increment_runs, action.onstrike);
           break;
         case "wicket":
           setData((prevData) => ({
@@ -263,7 +156,7 @@ export default function Home() {
                 action.payload.increment_runs,
             },
           }));
-          updatePlayerScore(action.payload.increment_runs);
+          updatePlayerScore(action.payload.increment_runs, action.onstrike);
           break;
         case "wide":
           setData((prevData) => ({
@@ -275,50 +168,51 @@ export default function Home() {
                 action.payload.increment_runs,
             },
           }));
-          updatePlayerScore(action.payload.increment_runs);
+          updatePlayerScore(action.payload.increment_runs, action.onstrike);
           break;
         default:
           break;
       }
     });
+
+    // cleaning the previous actions on new ball click
     actions.current = [];
   }
 
   return (
     <main className="w-screen h-screen flex justify-center items-center">
-      <div className="container mx-auto flex bg-white p-4">
+      <div className="container mx-auto flex  p-4 gap-4 bg-white">
         <div className="w-[75%]">
-          <p className="text-center font-bold my-2">Commentry Buttons</p>
+          <p className="text-center font-bold my-2 text-2xl">
+            Commentry Buttons
+          </p>
+          <div className="p-4 border-black border-2 rounded-md h-full">
+            <div className="flex gap-2 my-6 w-full">
+              <CurrentPlayer title="Striker" name={striker} />
+              <CurrentPlayer title="Non Striker" name={nonstriker} />
+            </div>
 
-          <div className="flex gap-2 my-6 w-full">
-            <div className="w-full">
-              <p className="font-bold text-xl">Striker</p>
-              <p>{striker}</p>
-            </div>
-            <div className="w-full">
-              <p className="font-bold text-xl">Non Striker</p>
-              <p>{nonstriker}</p>
-            </div>
+            {buttons.map((item) => (
+              <Button
+                key={item.type}
+                title={item.type}
+                setActions={actions}
+                setAction={setAction}
+                action={item}
+                checkLastBallWasWicket={checkLastBallWasWicket}
+                refStriker={refStriker}
+                swapStrikerNonstriker={swapStrikerNonstriker}
+              />
+            ))}
+
+            <br />
+            <button
+              className="p-2 m-4 border-black border-2"
+              onClick={updateScoreboard}
+            >
+              New Ball
+            </button>
           </div>
-
-          {buttons.map((item) => (
-            <Button
-              key={item.type}
-              title={item.type}
-              setActions={actions}
-              setAction={setAction}
-              action={item}
-            />
-          ))}
-
-          <br />
-
-          <button
-            className="p-2 m-4 border-black border-2"
-            onClick={updateScoreboard}
-          >
-            New Ball
-          </button>
         </div>
 
         <Scoreboard

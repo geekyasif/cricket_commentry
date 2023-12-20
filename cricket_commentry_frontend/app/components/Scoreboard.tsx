@@ -1,25 +1,17 @@
 import React from "react";
-import { Players, TeamScoreboard } from "../interfaces";
-interface ScoreboardProps {
-  team_scoreboard: TeamScoreboard;
-  player_scoreboard: Players;
+import { IPlayers } from "../interfaces";
+import TeamScoreboard from "./TeamScoreboard";
+import PlayerScoreboard from "./PlayerScoreboard";
+interface IScoreboardProps {
+  team_scoreboard: any;
+  player_scoreboard: IPlayers;
 }
 
-function Scoreboard({ team_scoreboard, player_scoreboard }: ScoreboardProps) {
+function Scoreboard({ team_scoreboard, player_scoreboard }: IScoreboardProps) {
   return (
     <div className="w-[25%]">
-      <div className="border-black border-2 p-2 my-2">
-        <p>Team Scoreboard</p>
-        {Object.keys(team_scoreboard).map((key) => (
-          <p key={key}>
-            {key}: {team_scoreboard[key]}
-          </p>
-        ))}
-      </div>
-      <div className="border-black border-2 p-2 my-2">
-        <p>Player Scoreboard</p>
-        <p>{JSON.stringify(player_scoreboard)}</p>
-      </div>
+      <TeamScoreboard team_scoreboard={team_scoreboard} />
+      <PlayerScoreboard player_scoreboard={player_scoreboard} />
     </div>
   );
 }
