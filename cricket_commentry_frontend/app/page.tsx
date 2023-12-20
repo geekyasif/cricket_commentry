@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Action, Data, Review } from "./interfaces";
 import Button from "./components/Button";
+import Scoreboard from "./components/Scoreboard";
 
 const buttons = [
   {
@@ -16,7 +17,7 @@ const buttons = [
     type: 1,
     payload: {
       increment_ball: 1,
-      increment_runs: 0,
+      increment_runs: 1,
     },
   },
   {
@@ -69,6 +70,7 @@ const buttons = [
     },
   },
 ];
+
 export default function Home() {
   const [data, setData] = useState<Data>({
     team_scoreboard: {
@@ -89,33 +91,64 @@ export default function Home() {
       },
     },
   });
-
-  const { team_scoreboard } = data;
+  const { team_scoreboard, players } = data;
+  const [striker, setStriker] = useState<string>("Sachin");
+  const [nonstriker, setNonstriker] = useState<string>("Dravid");
 
   const [action, setAction] = useState<Action>({
     type: -1,
     payload: { increment_ball: 0, increment_runs: 0 },
   });
-  const [actions, setActions] = useState<Action[]>([]);
+  const actions = useRef<Action[]>([]);
 
-  useEffect(() => {
-    console.log("after setActions", actions);
-  }, [actions]);
+  function updatePlayerScore(run: number) {
+    setData((prevData) => {
+      const { players } = prevData;
+      const currentStriker = striker.toLowerCase();
+
+      if (currentStriker in players) {
+        return {
+          ...prevData,
+          players: {
+            ...prevData.players,
+            [currentStriker]: {
+              ...prevData.players[currentStriker],
+              runs: prevData.players[currentStriker].runs + run,
+            },
+          },
+        };
+      }
+
+      return prevData;
+    });
+  }
+
+  function swapStrikerNonstriker() {
+    setStriker((prevStriker) => {
+      setNonstriker((prevNonstriker) => {
+        // Swap the values of striker and nonstriker
+        const temp = prevStriker;
+        return temp;
+      });
+      // Return the original nonstriker as the new striker
+      return nonstriker;
+    });
+  }
 
   function updateScoreboard() {
-    const values = actions.reduce((acc, item) => {
+    const values = actions.current.reduce((acc, item) => {
       acc.push(item.type);
       return acc;
     }, []);
 
     if (values.includes("wicket") && values.includes("no_ball")) {
-      const newResult = actions.filter((item) => item.type !== "wicket");
-      console.log("filtered result", newResult);
-      // this is not updating immediatelly
-      setActions(newResult);
+      const newResult = actions.current.filter(
+        (item) => item.type !== "wicket"
+      );
+      actions.current = newResult;
     }
 
-    actions?.map((action) => {
+    actions.current.map((action) => {
       switch (action.type) {
         case 0:
           setData((prevData) => ({
@@ -141,6 +174,9 @@ export default function Home() {
                 action.payload.increment_runs,
             },
           }));
+
+          updatePlayerScore(action.payload.increment_runs);
+          swapStrikerNonstriker();
           break;
         case 2:
           setData((prevData) => ({
@@ -155,6 +191,7 @@ export default function Home() {
                 action.payload.increment_runs,
             },
           }));
+          updatePlayerScore(action.payload.increment_runs);
           break;
         case 3:
           setData((prevData) => ({
@@ -169,6 +206,8 @@ export default function Home() {
                 action.payload.increment_runs,
             },
           }));
+          updatePlayerScore(action.payload.increment_runs);
+          swapStrikerNonstriker();
           break;
         case 4:
           setData((prevData) => ({
@@ -183,6 +222,7 @@ export default function Home() {
                 action.payload.increment_runs,
             },
           }));
+          updatePlayerScore(action.payload.increment_runs);
           break;
         case 6:
           setData((prevData) => ({
@@ -197,6 +237,7 @@ export default function Home() {
                 action.payload.increment_runs,
             },
           }));
+          updatePlayerScore(action.payload.increment_runs);
           break;
         case "wicket":
           setData((prevData) => ({
@@ -222,6 +263,7 @@ export default function Home() {
                 action.payload.increment_runs,
             },
           }));
+          updatePlayerScore(action.payload.increment_runs);
           break;
         case "wide":
           setData((prevData) => ({
@@ -233,24 +275,37 @@ export default function Home() {
                 action.payload.increment_runs,
             },
           }));
+          updatePlayerScore(action.payload.increment_runs);
           break;
         default:
           break;
       }
     });
-    setActions([]);
-    console.log("after cleanup", actions);
+    actions.current = [];
   }
 
   return (
     <main className="w-screen h-screen flex justify-center items-center">
-      <div className="container mx-auto flex flex-row bg-white">
+      <div className="container mx-auto flex bg-white p-4">
         <div className="w-[75%]">
+          <p className="text-center font-bold my-2">Commentry Buttons</p>
+
+          <div className="flex gap-2 my-6 w-full">
+            <div className="w-full">
+              <p className="font-bold text-xl">Striker</p>
+              <p>{striker}</p>
+            </div>
+            <div className="w-full">
+              <p className="font-bold text-xl">Non Striker</p>
+              <p>{nonstriker}</p>
+            </div>
+          </div>
+
           {buttons.map((item) => (
             <Button
               key={item.type}
               title={item.type}
-              setActions={setActions}
+              setActions={actions}
               setAction={setAction}
               action={item}
             />
@@ -266,19 +321,10 @@ export default function Home() {
           </button>
         </div>
 
-        <div className="w-[25%]">
-          <div className="border-black border-2 p-2 my-2">
-            <p>Team Scoreboard</p>
-            {Object.keys(team_scoreboard).map((key) => (
-              <p key={key}>
-                {key}: {team_scoreboard[key]}
-              </p>
-            ))}
-          </div>
-          <div className="border-black border-2 p-2 my-2">
-            <p>Player Scoreboard</p>
-          </div>
-        </div>
+        <Scoreboard
+          team_scoreboard={team_scoreboard}
+          player_scoreboard={players}
+        />
       </div>
     </main>
   );
