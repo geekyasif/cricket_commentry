@@ -1,75 +1,58 @@
 export default [
     {
-        type: 0,
-        payload: {
-            increment_ball: 1,
-            increment_runs: 0,
-        },
-        onstrike: ""
+        id: 1,
+        type: "run",
+        title: 0,
+        value: 0
     },
     {
-        type: 1,
-        payload: {
-            increment_ball: 1,
-            increment_runs: 1,
-        },
-        onstrike: ""
+        id: 2,
+        type: "run",
+        title: 1,
+        value: 1
 
     },
     {
-        type: 2,
-        payload: {
-            increment_ball: 1,
-            increment_runs: 2,
-        },
-        onstrike: ""
+        id: 3,
+        type: "run",
+        title: 2,
+        value: 2
     },
     {
-        type: 3,
-        payload: {
-            increment_ball: 1,
-            increment_runs: 3,
-        },
-        onstrike: ""
+        id: 4,
+        type: "run",
+        title: 3,
+        value: 3
     },
     {
-        type: 4,
-        payload: {
-            increment_ball: 1,
-            increment_runs: 4,
-        },
-        onstrike: ""
+        id: 5,
+        type: "run",
+        title: 4,
+        value: 4
     },
     {
-        type: 6,
-        payload: {
-            increment_ball: 1,
-            increment_runs: 6,
-        },
-        onstrike: ""
+        id: 6,
+        type: "run",
+        title: 6,
+        value: 6
     },
+
     {
+        id: 7,
         type: "wicket",
-        payload: {
-            increment_ball: 1,
-            increment_wicket: 1,
-        },
-        onstrike: ""
+        title: "Wicket",
+        value: "wicket"
     },
     {
+        id: 8,
+        type: "wide_ball",
+        title: "Wide Ball",
+        value: "wide_ball"
+    },
+    {
+        id: 9,
         type: "no_ball",
-        payload: {
-            increment_ball: 0,
-            increment_runs: 1,
-        },
-        onstrike: ""
-    },
-    {
-        type: "wide",
-        payload: {
-            increment_ball: 0,
-            increment_runs: 1,
-        },
-        onstrike: ""
+        title: "No Ball",
+        value: "no_ball"
     },
 ];
