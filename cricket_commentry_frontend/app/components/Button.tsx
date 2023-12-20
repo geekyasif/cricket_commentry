@@ -61,12 +61,20 @@ function Button({ button, currAction }: IButtonProps) {
       }
 
       if (type === "run" && button.type === "wicket") {
-        let final_run = currAction.current.payload.runs - 1;
-        currAction.current.payload = {
-          runs: final_run <= 0 ? 0 : final_run,
-          ball: 1,
-          wicket: 1,
-        };
+        if (currAction.current.payload.runs === 6) {
+          currAction.current.payload = {
+            runs: 0,
+            ball: 1,
+            wicket: 1,
+          };
+        } else {
+          let final_run = currAction.current.payload.runs - 1;
+          currAction.current.payload = {
+            runs: final_run <= 0 ? 0 : final_run,
+            ball: 1,
+            wicket: 1,
+          };
+        }
       }
 
       if (type === "no_ball" && button.type === "run") {
@@ -78,16 +86,15 @@ function Button({ button, currAction }: IButtonProps) {
       }
 
       if (type === "wide_ball" && button.type === "run") {
-        let final_run = 1 + button.value;
         currAction.current.payload = {
-          runs: final_run,
+          runs: button.value,
           ball: 0,
         };
       }
 
       if (type === "wide_ball" && button.type === "no_ball") {
         currAction.current.payload = {
-          runs: 2,
+          runs: 1,
           ball: 0,
         };
       }
