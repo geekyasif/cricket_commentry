@@ -39,6 +39,9 @@ const Button = ({ button, currAction }: IButtonProps) => {
       switch (button.type) {
         case "run":
           if (type === "run") {
+            if (button.value === 1 || button.value === 3) {
+              dispatch({ type: "set_swap_players" });
+            }
             currAction.current.payload = {
               ...currentPayload,
               runs: button.value,
