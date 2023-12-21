@@ -23,12 +23,15 @@ function TeamScoreboard() {
     <div className="">
       <ScoreboardHeader title="Team Scoreboard" />
       <div className="border-black border-2 p-6 my-2 rounded-md">
-        {Object?.keys(team_scoreboard)?.map((key) => (
-          <p key={key}>
-            <span className="font-bold">{key.split("_").join(" ")}</span>:{" "}
-            {team_scoreboard[key as keyof ITeamScoreboard]}
-          </p>
-        ))}
+        {Object?.keys(team_scoreboard)?.map(
+          (key) =>
+            key !== "_id" && (
+              <p key={key}>
+                <span className="font-bold">{key.split("_").join(" ")}</span>:{" "}
+                {team_scoreboard[key as keyof ITeamScoreboard]}
+              </p>
+            )
+        )}
       </div>
     </div>
   );
