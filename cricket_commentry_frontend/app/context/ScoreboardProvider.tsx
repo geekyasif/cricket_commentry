@@ -15,7 +15,7 @@ export interface IState {
   nonStriker: string;
 }
 
-type Action =
+export type Action =
   | { type: "set_scoreboard"; payload: IData }
   | { type: "set_striker" | "set_nonStriker"; payload: string }
   | { type: "set_swap_players" };

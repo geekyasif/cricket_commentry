@@ -44,10 +44,16 @@ function CommentryButtons() {
 
   // updated score listening here
   useEffect(() => {
-    socket.on("updatedScoreboard", (data: any) => {
+    const handleUpdatedScoreboard = (data: any) => {
       dispatch({ type: "set_scoreboard", payload: data[0] });
-    });
-  }, []);
+    };
+
+    socket.on("updatedScoreboard", handleUpdatedScoreboard);
+
+    return () => {
+      socket.off("updatedScoreboard", handleUpdatedScoreboard);
+    };
+  }, [dispatch]);
 
   function clearScoreBoard() {
     socket.emit("clear-scoreboard", scoreboard._id);
