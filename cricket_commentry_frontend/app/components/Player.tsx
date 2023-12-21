@@ -1,5 +1,6 @@
+"use client";
+
 import React from "react";
-import { IPlayers } from "../interfaces";
 import useScoreboard from "../hooks/useScoreboard";
 
 interface IPlayerProps {

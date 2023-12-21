@@ -6,6 +6,7 @@ import Buttons from "./Buttons";
 import { socket } from "../services/socket";
 import { IActionRef } from "../interfaces";
 import useScoreboard from "../hooks/useScoreboard";
+import { initialState } from "../context/ScoreboardProvider";
 
 function CommentryButtons() {
   const { state, dispatch } = useScoreboard();
@@ -57,6 +58,7 @@ function CommentryButtons() {
 
   function clearScoreBoard() {
     socket.emit("clear-scoreboard", scoreboard._id);
+    dispatch({ type: "set_scoreboard", payload: initialState.scoreboard });
     dispatch({ type: "set_striker", payload: "" });
     dispatch({ type: "set_nonStriker", payload: "" });
   }

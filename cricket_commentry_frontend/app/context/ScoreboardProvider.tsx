@@ -29,7 +29,7 @@ export const ScoreboardContext = createContext<IScoreboardContext | undefined>(
   undefined
 );
 
-const initialState: IState = {
+export const initialState: IState = {
   scoreboard: {
     _id: "",
     __v: 0,

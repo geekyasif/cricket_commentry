@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { socket } from "../services/socket";
 import useScoreboard from "../hooks/useScoreboard";
