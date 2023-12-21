@@ -16,7 +16,7 @@ export interface ITeamScoreboard {
 
 export interface IPlayer {
   runs: number;
-  review: IReview;
+  review: string;
 }
 
 export interface IPlayers {
@@ -40,4 +40,14 @@ export interface IAction {
   type: number | string;
   payload: IPayload | any;
   onstrike: string
+}
+
+export interface IActionRef {
+  type: string;
+  payload: {
+    runs: number;
+    ball: number;
+    wicket?: number;
+    onstrike?: string;
+  };
 }

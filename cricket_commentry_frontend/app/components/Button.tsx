@@ -1,21 +1,32 @@
 import React, { MutableRefObject } from "react";
-import { IActionRef } from "../page";
+import { IActionRef } from "../interfaces";
 
 interface IButtonProps {
   button: any;
   currAction: MutableRefObject<IActionRef>;
+  onStrike: string;
+  swapStrikerNonstriker: () => void;
 }
 
-function Button({ button, currAction }: IButtonProps) {
+function Button({
+  button,
+  onStrike,
+  swapStrikerNonstriker,
+  currAction,
+}: IButtonProps) {
   const handleButtonClick = () => {
     const { type } = currAction.current;
 
     if (type === "") {
       if (button.type === "run") {
+        if (button.value === 1 || button.value === 3) {
+          swapStrikerNonstriker();
+        }
         currAction.current.type = button.type;
         currAction.current.payload = {
           runs: button.value,
           ball: 1,
+          onstrike: onStrike,
         };
       }
 
@@ -25,6 +36,7 @@ function Button({ button, currAction }: IButtonProps) {
           runs: 0,
           ball: 1,
           wicket: 1,
+          onstrike: onStrike,
         };
       }
 
@@ -33,6 +45,7 @@ function Button({ button, currAction }: IButtonProps) {
         currAction.current.payload = {
           runs: 1,
           ball: 0,
+          onstrike: onStrike,
         };
       }
 
@@ -41,6 +54,7 @@ function Button({ button, currAction }: IButtonProps) {
         currAction.current.payload = {
           runs: 1,
           ball: 0,
+          onstrike: onStrike,
         };
       }
     } else {
@@ -49,6 +63,7 @@ function Button({ button, currAction }: IButtonProps) {
         currAction.current.payload = {
           runs: button.value,
           ball: 1,
+          onstrike: onStrike,
         };
       }
 
@@ -57,6 +72,7 @@ function Button({ button, currAction }: IButtonProps) {
         currAction.current.payload = {
           runs: runs + 1,
           ball: 0,
+          onstrike: onStrike,
         };
       }
 
@@ -66,6 +82,7 @@ function Button({ button, currAction }: IButtonProps) {
             runs: 0,
             ball: 1,
             wicket: 1,
+            onstrike: onStrike,
           };
         } else {
           let final_run = currAction.current.payload.runs - 1;
@@ -73,6 +90,7 @@ function Button({ button, currAction }: IButtonProps) {
             runs: final_run <= 0 ? 0 : final_run,
             ball: 1,
             wicket: 1,
+            onstrike: onStrike,
           };
         }
       }
@@ -82,6 +100,7 @@ function Button({ button, currAction }: IButtonProps) {
         currAction.current.payload = {
           runs: final_run,
           ball: 0,
+          onstrike: onStrike,
         };
       }
 
@@ -89,6 +108,7 @@ function Button({ button, currAction }: IButtonProps) {
         currAction.current.payload = {
           runs: button.value,
           ball: 0,
+          onstrike: onStrike,
         };
       }
 
@@ -96,6 +116,7 @@ function Button({ button, currAction }: IButtonProps) {
         currAction.current.payload = {
           runs: 1,
           ball: 0,
+          onstrike: onStrike,
         };
       }
 
@@ -103,6 +124,7 @@ function Button({ button, currAction }: IButtonProps) {
         currAction.current.payload = {
           runs: 2,
           ball: 0,
+          onstrike: onStrike,
         };
       }
 
@@ -112,6 +134,7 @@ function Button({ button, currAction }: IButtonProps) {
           runs: runs + 1,
           ball: 0,
           wicket: 0,
+          onstrike: onStrike,
         };
       }
     }
