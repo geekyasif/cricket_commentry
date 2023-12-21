@@ -12,11 +12,13 @@ export interface ITeamScoreboard {
   total_wide_balls: number;
   total_no_balls: number;
   total_balls: number;
+  _id: string;
 }
 
 export interface IPlayer {
   runs: number;
   review: string;
+  _id: string;
 }
 
 export interface IPlayers {
@@ -24,8 +26,10 @@ export interface IPlayers {
 }
 
 export interface IData {
+  _id: string;
   team_scoreboard: ITeamScoreboard;
   players: IPlayers;
+  __v: number;
 }
 
 export interface IPayload {
@@ -44,6 +48,7 @@ export interface IAction {
 
 export interface IActionRef {
   type: string;
+  scoreboardId: string;
   payload: {
     runs: number;
     ball: number;
