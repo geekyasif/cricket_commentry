@@ -82,7 +82,7 @@ function CommentryButtons() {
   }
 
   return (
-    <div className="w-[60%] ">
+    <div className="w-[40%] ">
       <p className="text-center font-bold my-2 text-2xl">Commentry Buttons</p>
       <div className="p-4 rounded-md h-full">
         <StrikerNonStriker />

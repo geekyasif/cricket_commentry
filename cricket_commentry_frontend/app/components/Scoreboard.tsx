@@ -4,7 +4,7 @@ import PlayersScoreboard from "./PlayersScoreboard";
 
 function Scoreboard() {
   return (
-    <div className="w-[40%]">
+    <div className="w-[60%] overflow-hidden">
       <TeamScoreboard />
       <PlayersScoreboard />
     </div>
