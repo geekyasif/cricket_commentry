@@ -82,13 +82,13 @@ function CommentryButtons() {
   }
 
   return (
-    <div className="w-[40%] ">
+    <div className="w-full lg:w-[40%]">
       <p className="text-center font-bold my-2 text-2xl">Commentry Buttons</p>
       <div className="p-4 rounded-md h-full">
         <StrikerNonStriker />
         <Buttons currAction={currAction} />
 
-        <div className="flex">
+        <div className="flex flex-wrap lg:flex-nowrap">
           <button
             className="p-8 m-4 w-full rounded-md  text-white font-bold bg-green-500 hover:bg-green-400 transition-all"
             onClick={updateScoreboard}

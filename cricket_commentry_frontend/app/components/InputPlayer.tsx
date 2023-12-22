@@ -15,10 +15,10 @@ function InputPlayer({ label, value, type }: ICurrentPlayerProps) {
   const scoreboardId = state?.scoreboard?._id;
 
   return (
-    <div className="w-full text-center">
+    <div className="w-full text-center flex flex-row lg:flex-col items-center">
       <label
         htmlFor={label}
-        className={`font-semibold text-xl px-2 text-white rounded  ${
+        className={`flex items-center justify-center font-semibold text-xl px-2 text-white rounded h-full w-full  ${
           label === "Striker" ? "bg-green-500" : "bg-yellow-500"
         }`}
       >
@@ -27,7 +27,7 @@ function InputPlayer({ label, value, type }: ICurrentPlayerProps) {
       <br />
       <input
         id={label}
-        className={`border-gray-300 border-2 rounded-md p-2 text-center mt-2 focus:border-black`}
+        className={`border-gray-300 border-2 rounded-md p-2 text-center lg:mt-2 focus:border-black h-full w-full`}
         value={value}
         placeholder="Enter player name..."
         onChange={(e) => dispatch({ type, payload: e.target.value })}

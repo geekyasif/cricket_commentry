@@ -11,21 +11,21 @@ function Buttons({ currAction }: IButtonsProps) {
   return (
     <div>
       {/* first row  */}
-      <div className="flex">
+      <div className="flex flex-wrap lg:flex-nowrap">
         {buttons.slice(0, 4).map((button) => (
           <Button key={button.id} button={button} currAction={currAction} />
         ))}
       </div>
 
       {/* second row  */}
-      <div className="flex">
+      <div className="flex flex-wrap lg:flex-nowrap">
         {buttons.slice(4, 7).map((button) => (
           <Button key={button.id} button={button} currAction={currAction} />
         ))}
       </div>
 
       {/* third row  */}
-      <div className="flex">
+      <div className="flex flex-wrap lg:flex-nowrap">
         {buttons.slice(7, 9).map((button) => (
           <Button key={button.id} button={button} currAction={currAction} />
         ))}
