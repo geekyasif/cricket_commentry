@@ -10,7 +10,7 @@ interface ICurrentPlayerProps {
   type: "set_striker" | "set_nonStriker";
 }
 
-function CurrentPlayer({ label, value, type }: ICurrentPlayerProps) {
+function InputPlayer({ label, value, type }: ICurrentPlayerProps) {
   const { state, dispatch } = useScoreboard();
   const scoreboardId = state?.scoreboard?._id;
 
@@ -50,4 +50,4 @@ function CurrentPlayer({ label, value, type }: ICurrentPlayerProps) {
   );
 }
 
-export default CurrentPlayer;
+export default InputPlayer;

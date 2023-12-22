@@ -8,7 +8,7 @@ interface IPlayerProps {
   index: number;
 }
 
-function Player({ player, index }: IPlayerProps) {
+function PlayerScore({ player, index }: IPlayerProps) {
   const { state } = useScoreboard();
   const { scoreboard } = state;
   const { players } = scoreboard;
@@ -24,4 +24,4 @@ function Player({ player, index }: IPlayerProps) {
   );
 }
 
-export default Player;
+export default PlayerScore;

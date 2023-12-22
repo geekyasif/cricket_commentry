@@ -1,17 +1,18 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
-import CurrentPlayer from "./CurrentPlayer";
 import Buttons from "./Buttons";
 import { socket } from "../services/socket";
 import { IActionRef } from "../interfaces";
 import useScoreboard from "../hooks/useScoreboard";
 import { initialState } from "../context/ScoreboardProvider";
+import StrikerNonStriker from "./StrikerNonStriker";
 
 function CommentryButtons() {
   const { state, dispatch } = useScoreboard();
-  const { nonStriker, scoreboard } = state;
+  const { scoreboard } = state;
 
+  // for storing the current action
   const currAction = useRef<IActionRef>({
     type: "",
     scoreboardId: "",
@@ -27,10 +28,14 @@ function CommentryButtons() {
   function updateScoreboard() {
     currAction.current.scoreboardId = scoreboard._id;
     socket.emit("new-ball", currAction.current);
+
     if (currAction.current.type === "wicket") {
       dispatch({ type: "set_striker", payload: "" });
+      socket.emit("clear_striker_input");
       alert("Please enter new player name in striker");
     }
+
+    // clearning the currection action after new ball
     currAction.current = {
       type: "",
       scoreboardId: "",
@@ -47,38 +52,40 @@ function CommentryButtons() {
   useEffect(() => {
     const handleUpdatedScoreboard = (data: any) => {
       dispatch({ type: "set_scoreboard", payload: data[0] });
+      Object.keys(data[0].players).forEach((player) => {
+        if (data[0].players[player].review === "striker") {
+          dispatch({ type: "set_striker", payload: player });
+        }
+        if (data[0].players[player].review === "nonstriker") {
+          dispatch({ type: "set_nonStriker", payload: player });
+        }
+      });
     };
-
     socket.on("updatedScoreboard", handleUpdatedScoreboard);
+
+    // cleaning the striker input on wicket
+    socket.on("striker_input_cleaned", () => {
+      dispatch({ type: "set_striker", payload: "" });
+    });
 
     return () => {
       socket.off("updatedScoreboard", handleUpdatedScoreboard);
     };
   }, [dispatch]);
 
+  // clearing the scoreboard from db also
   function clearScoreBoard() {
     socket.emit("clear-scoreboard", scoreboard._id);
     dispatch({ type: "set_scoreboard", payload: initialState.scoreboard });
     dispatch({ type: "set_striker", payload: "" });
     dispatch({ type: "set_nonStriker", payload: "" });
   }
+
   return (
     <div className="w-[60%] ">
       <p className="text-center font-bold my-2 text-2xl">Commentry Buttons</p>
       <div className="p-4 rounded-md h-full">
-        <div className="flex gap-2 my-6 w-full p-3">
-          <CurrentPlayer
-            label="Striker"
-            value={state.striker}
-            type="set_striker"
-          />
-          <CurrentPlayer
-            label="Non Striker"
-            value={nonStriker}
-            type="set_nonStriker"
-          />
-        </div>
-
+        <StrikerNonStriker />
         <Buttons currAction={currAction} />
 
         <div>

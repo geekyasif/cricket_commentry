@@ -2,10 +2,10 @@
 
 import React from "react";
 import ScoreboardHeader from "./ScoreboardHeader";
-import Player from "./Player";
 import useScoreboard from "../hooks/useScoreboard";
+import PlayerScore from "./PlayerScore";
 
-function PlayerScoreboard() {
+function PlayersScoreboard() {
   const { state } = useScoreboard();
   const { scoreboard } = state;
   const { players } = scoreboard;
@@ -15,11 +15,11 @@ function PlayerScoreboard() {
       <ScoreboardHeader title="Player Scoreboard" />
       <div className="border-black border-2 p-6 my-2 rounded-md">
         {Object?.keys(players)?.map((player, index) => (
-          <Player key={player} player={player} index={index} />
+          <PlayerScore key={player} player={player} index={index} />
         ))}
       </div>
     </div>
   );
 }
 
-export default PlayerScoreboard;
+export default PlayersScoreboard;

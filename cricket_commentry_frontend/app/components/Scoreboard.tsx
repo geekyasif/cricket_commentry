@@ -1,12 +1,12 @@
 import React from "react";
 import TeamScoreboard from "./TeamScoreboard";
-import PlayerScoreboard from "./PlayerScoreboard";
+import PlayersScoreboard from "./PlayersScoreboard";
 
 function Scoreboard() {
   return (
     <div className="w-[40%]">
       <TeamScoreboard />
-      <PlayerScoreboard />
+      <PlayersScoreboard />
     </div>
   );
 }

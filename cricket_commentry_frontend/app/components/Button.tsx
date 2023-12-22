@@ -3,6 +3,7 @@
 import React, { MutableRefObject } from "react";
 import useScoreboard from "../hooks/useScoreboard";
 import { IActionRef } from "../interfaces";
+import { socket } from "../services/socket";
 
 interface IButtonProps {
   button: any;
@@ -11,7 +12,15 @@ interface IButtonProps {
 
 const Button = ({ button, currAction }: IButtonProps) => {
   const { state, dispatch } = useScoreboard();
-  const { striker } = state;
+  const { striker, nonStriker } = state;
+
+  function swapPlayers() {
+    socket.emit("set_swap_players", {
+      scoreboardId: state.scoreboard._id,
+      striker,
+      nonStriker,
+    });
+  }
 
   const handleButtonClick = () => {
     const { type } = currAction.current;
@@ -21,7 +30,7 @@ const Button = ({ button, currAction }: IButtonProps) => {
       switch (button.type) {
         case "run":
           if (button.value === 1 || button.value === 3) {
-            dispatch({ type: "set_swap_players" });
+            swapPlayers();
           }
           currAction.current.payload = { ...commonPayload, runs: button.value };
           break;
@@ -42,7 +51,7 @@ const Button = ({ button, currAction }: IButtonProps) => {
         case "run":
           if (type === "run") {
             if (button.value === 1 || button.value === 3) {
-              dispatch({ type: "set_swap_players" });
+              swapPlayers();
             }
             currAction.current.payload = {
               ...currentPayload,
