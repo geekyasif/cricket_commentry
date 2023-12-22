@@ -88,16 +88,16 @@ function CommentryButtons() {
         <StrikerNonStriker />
         <Buttons currAction={currAction} />
 
-        <div>
+        <div className="flex">
           <button
-            className="p-8 m-4 border-black border-2 w-full rounded-md"
+            className="p-8 m-4 w-full rounded-md  text-white font-bold bg-green-500 hover:bg-green-400 transition-all"
             onClick={updateScoreboard}
           >
             New Ball
           </button>
 
           <button
-            className="p-8 m-4 border-black border-2 w-full rounded-md"
+            className="p-8 m-4 w-full rounded-md  text-white font-bold bg-red-500 hover:bg-red-400 transition-all"
             onClick={clearScoreBoard}
           >
             Clear Scoreboard

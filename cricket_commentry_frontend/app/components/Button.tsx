@@ -110,7 +110,7 @@ const Button = ({ button, currAction }: IButtonProps) => {
 
   return (
     <button
-      className="p-8 m-4 border-black border-2 rounded-md w-full"
+      className="p-8 m-4 shadow border rounded-md w-full hover:shadow-md"
       onClick={handleButtonClick}
     >
       {button.title}

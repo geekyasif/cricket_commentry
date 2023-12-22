@@ -5,7 +5,7 @@ interface IScoreboardHeaderProps {
 }
 
 function ScoreboardHeader({ title }: IScoreboardHeaderProps) {
-  return <p className="font-bold text-center mt-6 mb-2">{title}</p>;
+  return <p className="font-semibold text-xl text-center mt-6 mb-4">{title}</p>;
 }
 
 export default ScoreboardHeader;

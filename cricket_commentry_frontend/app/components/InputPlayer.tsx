@@ -16,7 +16,12 @@ function InputPlayer({ label, value, type }: ICurrentPlayerProps) {
 
   return (
     <div className="w-full text-center">
-      <label htmlFor={label} className="font-bold text-xl mb-2">
+      <label
+        htmlFor={label}
+        className={`font-semibold text-xl px-2 text-white rounded  ${
+          label === "Striker" ? "bg-green-500" : "bg-yellow-500"
+        }`}
+      >
         {label}
       </label>
       <br />
