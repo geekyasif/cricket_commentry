@@ -55,6 +55,8 @@ export interface IActionRef {
     runs: number;
     ball: number;
     wicket?: number;
+    no_ball?: number;
+    wide_ball?: number;
     onstrike?: string;
   };
 }

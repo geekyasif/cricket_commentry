@@ -82,7 +82,7 @@ function PlayerScoreboardTableData() {
               players[player].review !== "nonstriker" &&
               players[player].review !== "striker" && (
                 <tr key={player}>
-                  <td className="px-6 py-4 whitespace-nowrap">{index + 1}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{index + 3}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-center">
                     {player.toUpperCase()}
                   </td>

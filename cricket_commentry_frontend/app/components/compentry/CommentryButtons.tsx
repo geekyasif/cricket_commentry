@@ -20,9 +20,19 @@ function CommentryButtons() {
       runs: 0,
       ball: 0,
       wicket: 0,
+      wide_ball: 0,
+      no_ball: 0,
       onstrike: "",
     },
   });
+
+  // syncing the currAction so it will be same from any tabs
+  useEffect(() => {
+    socket.on("set_current_action", (event: IActionRef) => {
+      console.log("from server event", event);
+      currAction.current = event;
+    });
+  }, [currAction.current]);
 
   // updated score listening here
   useEffect(() => {
@@ -42,6 +52,11 @@ function CommentryButtons() {
     // cleaning the striker input on wicket
     socket.on("striker_input_cleaned", () => {
       dispatch({ type: "set_striker", payload: "" });
+    });
+
+    // cleaning the non striker input on wicket
+    socket.on("nonstriker_input_cleaned", () => {
+      dispatch({ type: "set_nonStriker", payload: "" });
     });
 
     return () => {

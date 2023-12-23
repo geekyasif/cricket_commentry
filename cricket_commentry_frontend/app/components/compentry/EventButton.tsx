@@ -2,11 +2,11 @@
 
 import React from "react";
 import useScoreboard from "../../hooks/useScoreboard";
-import { IButtonProps } from "../../interfaces";
+import { IActionRef, IButtonProps } from "../../interfaces";
 import { socket } from "../../services/socket";
 
 const EventButton = ({ button, currAction }: IButtonProps) => {
-  const { state, dispatch } = useScoreboard();
+  const { state } = useScoreboard();
   const { striker, nonStriker } = state;
 
   function swapPlayers() {
@@ -17,7 +17,12 @@ const EventButton = ({ button, currAction }: IButtonProps) => {
     });
   }
 
+  function emitEvent(event: IActionRef) {
+    socket.emit("save_event_to_db", event);
+  }
+
   const handleButtonClick = () => {
+    currAction.current.scoreboardId = state.scoreboard._id;
     const { type } = currAction.current;
 
     if (type === "") {
@@ -27,14 +32,35 @@ const EventButton = ({ button, currAction }: IButtonProps) => {
           if (button.value === 1 || button.value === 3) {
             swapPlayers();
           }
-          currAction.current.payload = { ...commonPayload, runs: button.value };
+          currAction.current.payload = {
+            ...commonPayload,
+            runs: button.value,
+            ball: 1,
+          };
           break;
         case "wicket":
-          currAction.current.payload = { ...commonPayload, runs: 0, wicket: 1 };
+          currAction.current.payload = {
+            ...commonPayload,
+            runs: 0,
+            wicket: 1,
+            ball: 1,
+          };
           break;
         case "wide_ball":
+          currAction.current.payload = {
+            ...commonPayload,
+            runs: 1,
+            ball: 0,
+            wide_ball: 1,
+          };
+          break;
         case "no_ball":
-          currAction.current.payload = { ...commonPayload, runs: 1 };
+          currAction.current.payload = {
+            ...commonPayload,
+            runs: 1,
+            ball: 0,
+            no_ball: 1,
+          };
           break;
         default:
           break;
@@ -58,8 +84,18 @@ const EventButton = ({ button, currAction }: IButtonProps) => {
               runs: currentPayload.runs + 1,
             };
           } else if (type === "wicket") {
-            const finalRun =
-              currentPayload.runs <= 1 ? 0 : currentPayload.runs - 1;
+            let finalRun = 0;
+
+            if (
+              currentPayload.runs <= 1 ||
+              currentPayload.runs === 4 ||
+              currentPayload.runs === 6
+            ) {
+              finalRun = 0;
+            }
+            if (currentPayload.runs >= 2 && currentPayload.runs <= 3) {
+              finalRun = currentPayload.runs - 1;
+            }
             currAction.current.payload = {
               ...currentPayload,
               runs: finalRun,
@@ -71,6 +107,12 @@ const EventButton = ({ button, currAction }: IButtonProps) => {
           if (type === "wide_ball") {
             currAction.current.type = "wide_ball_no_ball";
           } else if (type === "run") {
+            currAction.current.payload = {
+              ...currentPayload,
+              runs: currentPayload.runs + 1,
+            };
+          } else if (type === "wicket") {
+            currAction.current.type = "no_ball_wicket";
             currAction.current.payload = {
               ...currentPayload,
               runs: currentPayload.runs + 1,
@@ -96,11 +138,33 @@ const EventButton = ({ button, currAction }: IButtonProps) => {
               wicket: 0,
             };
           }
+          if (type === "run") {
+            currAction.current.type = "run_wicket";
+            let finalRun = 0;
+
+            if (
+              currentPayload.runs <= 1 ||
+              currentPayload.runs === 4 ||
+              currentPayload.runs === 6
+            ) {
+              finalRun = 0;
+            }
+            if (currentPayload.runs >= 2 && currentPayload.runs <= 3) {
+              finalRun = currentPayload.runs - 1;
+            }
+            currAction.current.payload = {
+              ...currentPayload,
+              runs: finalRun,
+              wicket: 1,
+            };
+          }
           break;
         default:
           break;
       }
     }
+
+    emitEvent(currAction.current);
   };
 
   return (

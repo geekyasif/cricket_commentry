@@ -11,12 +11,23 @@ function ActionButtons({ currAction }: IActionButtonsProps) {
 
   // updating the scoreboard
   function updateScoreboard() {
+    if (!currAction.current.type) {
+      alert("Please select some event first!");
+      return;
+    }
+
     currAction.current.scoreboardId = scoreboard._id;
     socket.emit("new-ball", currAction.current);
 
     if (currAction.current.type === "wicket") {
       dispatch({ type: "set_striker", payload: "" });
       socket.emit("clear_striker_input");
+      alert("Please enter new player name in striker");
+    }
+
+    if (currAction.current.type === "run_wicket") {
+      dispatch({ type: "set_nonStriker", payload: "" });
+      socket.emit("clear_non_striker_input");
       alert("Please enter new player name in striker");
     }
 
@@ -28,6 +39,8 @@ function ActionButtons({ currAction }: IActionButtonsProps) {
         runs: 0,
         ball: 0,
         wicket: 0,
+        wide_ball: 0,
+        no_ball: 0,
         onstrike: "",
       },
     };
@@ -46,14 +59,14 @@ function ActionButtons({ currAction }: IActionButtonsProps) {
       <ActionButton
         title="New Ball"
         handleFunction={updateScoreboard}
-        bgColorDark="bg-red-500"
-        bgColorLight="bg-red-400"
+        bgColorDark="bg-green-500"
+        bgColorLight="bg-green-400"
       />
       <ActionButton
         title=" Clear Scoreboard"
         handleFunction={clearScoreBoard}
-        bgColorDark="bg-green-500"
-        bgColorLight="bg-green-400"
+        bgColorDark="bg-red-500"
+        bgColorLight="bg-red-400"
       />
     </div>
   );
