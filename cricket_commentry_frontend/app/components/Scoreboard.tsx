@@ -1,6 +1,6 @@
 import React from "react";
-import TeamScoreboard from "./TeamScoreboard";
-import PlayersScoreboard from "./PlayersScoreboard";
+import TeamScoreboard from "./scoreboard/teamScoreboard/TeamScoreboard";
+import PlayersScoreboard from "./scoreboard/playerScoreboard/PlayersScoreboard";
 
 function Scoreboard() {
   return (

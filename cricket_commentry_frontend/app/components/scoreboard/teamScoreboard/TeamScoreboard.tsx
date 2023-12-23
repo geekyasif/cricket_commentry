@@ -1,5 +1,5 @@
 import React from "react";
-import ScoreboardHeader from "./ScoreboardHeader";
+import ScoreboardHeader from "../../ScoreboardHeader";
 import TeamScoreboardTableData from "./TeamScoreboardTableData";
 
 function TeamScoreboard() {

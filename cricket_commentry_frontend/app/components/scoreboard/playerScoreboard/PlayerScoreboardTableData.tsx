@@ -1,14 +1,14 @@
 "use client";
 
 import React from "react";
-import useScoreboard from "../hooks/useScoreboard";
+import useScoreboard from "../../../hooks/useScoreboard";
 
 function PlayerScoreboardTableData() {
   const { state } = useScoreboard();
   const { scoreboard } = state;
   const { players } = scoreboard;
   return (
-    <div className="">
+    <div className="overflow-scroll lg:overflow-auto">
       <table className="min-w-full divide-y divide-gray-200 border-gray-100 border-2">
         <thead className="bg-gray-50">
           <tr>

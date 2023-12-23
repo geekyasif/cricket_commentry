@@ -1,16 +1,11 @@
 "use client";
 
-import React, { MutableRefObject } from "react";
-import useScoreboard from "../hooks/useScoreboard";
-import { IActionRef } from "../interfaces";
-import { socket } from "../services/socket";
+import React from "react";
+import useScoreboard from "../../hooks/useScoreboard";
+import { IButtonProps } from "../../interfaces";
+import { socket } from "../../services/socket";
 
-interface IButtonProps {
-  button: any;
-  currAction: MutableRefObject<IActionRef>;
-}
-
-const Button = ({ button, currAction }: IButtonProps) => {
+const EventButton = ({ button, currAction }: IButtonProps) => {
   const { state, dispatch } = useScoreboard();
   const { striker, nonStriker } = state;
 
@@ -109,13 +104,15 @@ const Button = ({ button, currAction }: IButtonProps) => {
   };
 
   return (
-    <button
-      className="p-8 m-4 shadow border rounded-md lg:w-full hover:shadow-md"
-      onClick={handleButtonClick}
-    >
-      {button.title}
-    </button>
+    <div className="w-full">
+      <button
+        className="p-4 lg:p-6 lg:m-4 shadow border rounded-md hover:shadow-md w-full"
+        onClick={handleButtonClick}
+      >
+        {button.title}
+      </button>
+    </div>
   );
 };
 
-export default Button;
+export default EventButton;

@@ -1,3 +1,5 @@
+import { MutableRefObject } from "react";
+
 export enum IReview {
   Unplayed,
   Played,
@@ -55,4 +57,55 @@ export interface IActionRef {
     wicket?: number;
     onstrike?: string;
   };
+}
+
+
+
+export interface IActionButtonProps {
+  title: string;
+  handleFunction: () => void;
+  bgColorDark: string;
+  bgColorLight: string;
+}
+
+
+
+export interface IActionButtonsProps {
+  currAction: MutableRefObject<IActionRef>;
+}
+
+
+export interface IButtonProps {
+  button: any;
+  currAction: MutableRefObject<IActionRef>;
+}
+
+export interface IButtonsProps {
+  currAction: MutableRefObject<IActionRef>;
+}
+
+
+export interface ICurrentPlayerProps {
+  label: string;
+  value: string;
+  type: "set_striker" | "set_nonStriker";
+}
+
+
+export interface IPlayerProps {
+  player: string;
+  index: number;
+}
+
+export interface ITeamScoreboard {
+  _id: string;
+  total_runs: number;
+  total_wickets: number;
+  total_wide_balls: number;
+  total_no_balls: number;
+  total_balls: number;
+}
+
+export interface IScoreboardHeaderProps {
+  title: string;
 }

@@ -1,10 +1,10 @@
 import Scoreboard from "./components/Scoreboard";
-import CommentryButtons from "./components/CommentryButtons";
+import CommentryButtons from "./components/compentry/CommentryButtons";
 
 export default function Home() {
   return (
-    <main className="h-screen w-screen p-10 bg-gray-100">
-      <div className="flex flex-wrap lg:flex-nowrap p-4 gap-4 bg-white h-full shadow rounded-md">
+    <main className="w-screen lg:flex lg:items-center lg:justify-center p-10 bg-gray-100">
+      <div className="container flex flex-wrap lg:flex-nowrap p-4 lg:gap-6 bg-white shadow rounded-md">
         <CommentryButtons />
         <Scoreboard />
       </div>

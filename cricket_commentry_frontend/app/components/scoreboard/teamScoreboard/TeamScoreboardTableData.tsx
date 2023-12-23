@@ -1,24 +1,17 @@
 "use client";
 
 import React from "react";
-import useScoreboard from "../hooks/useScoreboard";
+import useScoreboard from "../../../hooks/useScoreboard";
+import { ITeamScoreboard } from "@/app/interfaces";
 
-interface ITeamScoreboard {
-  _id: string;
-  total_runs: number;
-  total_wickets: number;
-  total_wide_balls: number;
-  total_no_balls: number;
-  total_balls: number;
-}
 function TeamScoreboardTableData() {
   const { state } = useScoreboard();
   const { scoreboard } = state;
   const team_scoreboard: ITeamScoreboard = scoreboard.team_scoreboard;
 
   return (
-    <div>
-      <table className="min-w-full divide-y divide-gray-200 border-gray-100 border-2">
+    <div className="overflow-scroll lg:overflow-auto">
+      <table className="w-full divide-y divide-gray-200 border-gray-100 border-2">
         <thead className="bg-gray-50">
           <tr>
             <th

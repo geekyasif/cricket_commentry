@@ -2,7 +2,7 @@
 
 import React from "react";
 import InputPlayer from "./InputPlayer";
-import useScoreboard from "../hooks/useScoreboard";
+import useScoreboard from "../../hooks/useScoreboard";
 
 function StrikerNonStriker() {
   const { state } = useScoreboard();

@@ -1,12 +1,8 @@
 "use client";
 
 import React from "react";
-import useScoreboard from "../hooks/useScoreboard";
-
-interface IPlayerProps {
-  player: string;
-  index: number;
-}
+import useScoreboard from "../../../hooks/useScoreboard";
+import { IPlayerProps } from "@/app/interfaces";
 
 function PlayerScore({ player, index }: IPlayerProps) {
   const { state } = useScoreboard();
