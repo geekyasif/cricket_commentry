@@ -85,7 +85,6 @@ const EventButton = ({ button, currAction }: IButtonProps) => {
             };
           } else if (type === "wicket") {
             let finalRun = 0;
-
             if (
               currentPayload.runs <= 1 ||
               currentPayload.runs === 4 ||
@@ -107,10 +106,14 @@ const EventButton = ({ button, currAction }: IButtonProps) => {
           if (type === "wide_ball") {
             currAction.current.type = "wide_ball_no_ball";
           } else if (type === "run") {
+            currAction.current.type = "run_no_ball";
             currAction.current.payload = {
               ...currentPayload,
+              ball: 0,
+              no_ball: 1,
               runs: currentPayload.runs + 1,
             };
+            console.log("run_no_ball", currAction.current);
           } else if (type === "wicket") {
             currAction.current.type = "no_ball_wicket";
             currAction.current.payload = {

@@ -16,6 +16,8 @@ function ActionButtons({ currAction }: IActionButtonsProps) {
       return;
     }
 
+    console.log("on new ball", currAction.current);
+
     currAction.current.scoreboardId = scoreboard._id;
     socket.emit("new-ball", currAction.current);
 
